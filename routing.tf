@@ -1,5 +1,5 @@
 resource "aws_route_table" "terraform-public" {
-    vpc_id = "${aws_vpc.default.id}"
+    vpc_id = "${aws_vpc.myvpc.id}"
 
     route {
         cidr_block = "0.0.0.0/0"
@@ -7,11 +7,27 @@ resource "aws_route_table" "terraform-public" {
     }
 
     tags = {
-        Name = "${aws_routingtable}"
+        Name = "public-routing-table"
     }
 }
 
 resource "aws_route_table_association" "terraform-public" {
-    subnet_id = "${aws_subnet.subnet1-public.id}"
+    count = 3
+    subnet_id = "${element(aws_subnet.public-subnets.id.*. count.index)}"
     route_table_id = "${aws_route_table.terraform-public.id}"
+}
+
+
+resource "aws_route_table" "terraform-private" {
+    vpc_id = "${aws_vpc.myvpc.id}"
+
+    tags = {
+        Name = "private-routing-table"
+    }
+}
+
+resource "aws_route_table_association" "terraform-private" {
+    count = 3
+    subnet_id = "${element(aws_subnet.private-subnets.id.*. count.index)}"
+    route_table_id = "${aws_route_table.terraform-private.id}"
 }
