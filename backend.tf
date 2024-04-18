@@ -1,8 +1,9 @@
 terraform {
  backend "s3" {
-    bucket = "srikanthtumatibucketterraform"
-    key = "devopssrikanthtestbucket"
+    bucket = "devopssrikanthtestbucket"
+    key = "devopstestbucket"
     region = "us-east-1"
+    dynamodb_table = "srikanth-terraform-lock"
    
  } 
 }
